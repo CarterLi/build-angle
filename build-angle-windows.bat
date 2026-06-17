@@ -49,17 +49,17 @@ set COMMON_ARGS=^
     strip_debug_info=true ^
     symbol_level=0 ^
     angle_enable_trace=false ^
-    angle_enable_d3d9=false ^
-    angle_enable_gl=false ^
-    angle_enable_vulkan=false ^
-    angle_enable_null=false ^
+    angle_enable_d3d9=true ^
+    angle_enable_gl=true ^
+    angle_enable_vulkan=true ^
+    angle_enable_null=true ^
     angle_enable_metal=false ^
     angle_enable_wgpu=false ^
     angle_enable_d3d11=true ^
-    angle_enable_essl=false ^
+    angle_enable_essl=true ^
     angle_enable_glsl=true ^
     build_with_chromium=false ^
-    is_clang=true ^
+    is_clang=false ^
     clang_use_chrome_plugins=false
 
 :: Create output directories with new structure
@@ -102,7 +102,7 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-call ninja -C out/windows-x64 libEGL libGLESv2
+call ninja -C out/windows-x64 libEGL libGLESv1_CM libGLESv2
 if %ERRORLEVEL% NEQ 0 (
     echo Failed to build x64 version. Exiting.
     exit /b 1
@@ -110,10 +110,8 @@ if %ERRORLEVEL% NEQ 0 (
 
 :: Copy the DLLs and libs to build directory with new structure
 echo Copying x64 files to build directory...
-copy /Y out\windows-x64\libEGL.dll ..\build\windows\x64\bin\
-copy /Y out\windows-x64\libGLESv2.dll ..\build\windows\x64\bin\
-copy /Y out\windows-x64\libEGL.dll.lib ..\build\windows\x64\lib\libEGL.lib
-copy /Y out\windows-x64\libGLESv2.dll.lib ..\build\windows\x64\lib\libGLESv2.lib
+copy /Y out\windows-x64\*.dll ..\build\windows\x64\bin\
+copy /Y out\windows-x64\*.lib ..\build\windows\x64\lib\
 
 :: Copy d3dcompiler_47.dll for x64
 echo Copying d3dcompiler_47.dll for x64...
@@ -136,7 +134,7 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-call ninja -C out/windows-arm64 libEGL libGLESv2
+call ninja -C out/windows-arm64 libEGL libGLESv1_CM libGLESv2
 if %ERRORLEVEL% NEQ 0 (
     echo Failed to build ARM64 version. Exiting.
     exit /b 1
@@ -144,10 +142,8 @@ if %ERRORLEVEL% NEQ 0 (
 
 :: Copy the DLLs and libs to build directory with new structure
 echo Copying ARM64 files to build directory...
-copy /Y out\windows-arm64\libEGL.dll ..\build\windows\arm64\bin\
-copy /Y out\windows-arm64\libGLESv2.dll ..\build\windows\arm64\bin\
-copy /Y out\windows-arm64\libEGL.dll.lib ..\build\windows\arm64\lib\libEGL.lib
-copy /Y out\windows-arm64\libGLESv2.dll.lib ..\build\windows\arm64\lib\libGLESv2.lib
+copy /Y out\windows-arm64\*.dll ..\build\windows\arm64\bin\
+copy /Y out\windows-arm64\*.lib ..\build\windows\arm64\lib\
 
 :: Copy d3dcompiler_47.dll for ARM64
 echo Copying d3dcompiler_47.dll for ARM64...
