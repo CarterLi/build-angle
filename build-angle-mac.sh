@@ -31,13 +31,13 @@ COMMON_ARGS='
     # Disable unused backends
     angle_enable_d3d9=false
     angle_enable_d3d11=false
-    angle_enable_gl=false
-    angle_enable_null=false
+    angle_enable_gl=true
+    angle_enable_null=true
     angle_enable_vulkan=false
     angle_enable_wgpu=false
 
     # Language settings
-    angle_enable_essl=false
+    angle_enable_essl=true
     angle_enable_glsl=true
 
     # Optimize for size
@@ -54,7 +54,7 @@ gn gen out/mac-release-arm64 --args="
     target_cpu=\"arm64\"
     $COMMON_ARGS
 "
-ninja -C out/mac-release-arm64 libEGL libGLESv2
+ninja -C out/mac-release-arm64 libEGL libGLESv1_CM libGLESv2
 
 # Create new directory structure
 rm -rf ../build/mac/arm64/lib
@@ -68,7 +68,7 @@ gn gen out/mac-release-x86_64 --args="
     target_cpu=\"x64\"
     $COMMON_ARGS
 "
-ninja -C out/mac-release-x86_64 libEGL libGLESv2
+ninja -C out/mac-release-x86_64 libEGL libGLESv1_CM libGLESv2
 
 # Create new directory structure
 rm -rf ../build/mac/x86_64/lib
