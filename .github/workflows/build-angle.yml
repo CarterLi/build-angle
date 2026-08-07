@@ -36,12 +36,12 @@ jobs:
       release_exists: ${{ steps.check-release.outputs.release_exists }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Git
         run: |
@@ -83,20 +83,20 @@ jobs:
     needs: [get-angle-commit]
     # Only run if release doesn't exist
     if: needs.get-angle-commit.outputs.release_exists == 'false'
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
-          pip install --upgrade certifi
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade certifi
 
       - name: Make Scripts Executable
         run: |
@@ -127,7 +127,7 @@ jobs:
           cd ../../..
 
       - name: Upload macOS Archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: angle-mac-universal
           path: build/mac/angle-mac-universal.zip
@@ -138,20 +138,20 @@ jobs:
     needs: [get-angle-commit]
     # Only run if release doesn't exist
     if: needs.get-angle-commit.outputs.release_exists == 'false'
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
-          pip install --upgrade certifi
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade certifi
 
       - name: Make Scripts Executable
         run: |
@@ -181,7 +181,7 @@ jobs:
           cd ../../..
 
       - name: Upload iOS Archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: angle-ios-universal
           path: build/ios/angle-ios-universal.zip
@@ -192,24 +192,32 @@ jobs:
     needs: [get-angle-commit]
     # Only run if release doesn't exist
     if: needs.get-angle-commit.outputs.release_exists == 'false'
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.13'
+
+      - name: Install Windows SDK v10.0.28000
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --installPath "C:\Program Files\Microsoft Visual Studio\18\Enterprise" --quiet --force --norestart --add Microsoft.VisualStudio.Component.Windows11SDK.28000
 
       - name: Install Visual Studio Components
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+          vs-prerelease: true
 
       - name: Setup Windows Build Environment
         shell: cmd
         run: |
-          pip install --upgrade pip
-          pip install pywin32
+          python -m pip install --upgrade pip
+          python -m pip install pywin32
 
       - name: Build ANGLE for Windows (x64 and ARM64) with specific commit
         shell: cmd
@@ -243,14 +251,14 @@ jobs:
           Compress-Archive -Path arm64\* -DestinationPath angle-windows-arm64.zip
 
       - name: Upload Windows x64 Archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: angle-windows-x64
           path: build/windows/angle-windows-x64.zip
           retention-days: 7
 
       - name: Upload Windows ARM64 Archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: angle-windows-arm64
           path: build/windows/angle-windows-arm64.zip
@@ -268,10 +276,10 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Download All Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
